@@ -1,0 +1,29 @@
+From b4072cd7add189dae02f3787cbc6a9e65f0326e7 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Jo=C3=A3o=20Neto?= <joao@neto.pt>
+Date: Thu, 4 Oct 2018 09:55:00 +0100
+Subject: [PATCH 08/25] add missing policy
+
+`MPOL_LOCAL` has been a policy since Linux 3.8, but is missing from `numaif.h`
+---
+ numaif.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/numaif.h b/numaif.h
+index 2c9f214..de58097 100644
+--- a/numaif.h
++++ b/numaif.h
+@@ -23,9 +23,10 @@ extern long move_pages(int pid, unsigned long count,
+ 
+ /* Policies */
+ #define MPOL_DEFAULT     0
+-#define MPOL_PREFERRED    1
++#define MPOL_PREFERRED   1
+ #define MPOL_BIND        2
+ #define MPOL_INTERLEAVE  3
++#define MPOL_LOCAL       4
+ 
+ #define MPOL_MAX MPOL_INTERLEAVE
+ 
+-- 
+1.8.3.1
+
