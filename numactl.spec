@@ -1,6 +1,6 @@
 Name: numactl
 Version: 2.0.12
-Release: 2
+Release: 3
 Summary: Library for tuning for Non Uniform Memory Access machines
 License: GPLv2
 URL: https://github.com/numactl/numactl
@@ -48,11 +48,9 @@ Development package for numa library calls
 rm -rf $RPM_BUILD_ROOT
 %make_install
 
-%post libs
-/sbin/ldconfig
-
-%postun libs
-/sbin/ldconfig
+%ldconfig_scriptlets
+%post libs -p /sbin/ldconfig
+%postun libs -p /sbin/ldconfig
 
 %files
 %{_bindir}/memhog
@@ -80,6 +78,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Dec 20 2019 openEuler Buildteam <buildteam@openeuler.org> - 2.0.12-3
+- Fix ldconfig scriptlets
+
 * Thu Mar 21 2019 lihongjiang<lihongjiang6@huawei.com> - 2.0.12-2
 - Type:enhancement
 - ID:NA
