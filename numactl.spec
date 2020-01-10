@@ -1,20 +1,11 @@
 Name: numactl
-Version: 2.0.12
-Release: 3
+Version: 2.0.13
+Release: 4
 Summary: Library for tuning for Non Uniform Memory Access machines
 License: GPLv2
 URL: https://github.com/numactl/numactl
-Source0: https://github.com/numactl/numactl/releases/download/v2.0.12/numactl-2.0.12.tar.gz
+Source0: https://github.com/numactl/numactl/releases/download/v%{version}/numactl-%{version}.tar.gz
 BuildRequires: libtool automake autoconf git
-
-Patch6000: 0007-Fix-Add-ShmemHugePages-and-ShmemPmdMapped-to-system_.patch
-Patch6001: 0008-add-missing-policy.patch
-Patch6002: 0013-numactl-add-va_end-to-usage-function.patch
-Patch6003: 0014-libnuma-cleanup-node-cpu-mask-in-destructor.patch
-Patch6004: 0021-Removed-unnecessary-exit-from-memhog.c.patch
-Patch6005: 0022-Correct-sysconf-constants.patch
-Patch6006: 0024-numastat-Better-diagnostic-when-find-unknown-string-.patch
-Patch6007: 0025-numastat-Add-KReclaimable-to-list-of-known-fields-in.patch
 
 %description
 Simple NUMA policy support. It consists of a numactl program to run other
@@ -78,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jan 10 2020 yuxiangyang<yuxiangyang4@huawei.com> - 2.0.13-4
+- upgrade version to 2.0.13
+
 * Fri Dec 20 2019 openEuler Buildteam <buildteam@openeuler.org> - 2.0.12-3
 - Fix ldconfig scriptlets
 
