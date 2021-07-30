@@ -1,11 +1,11 @@
 Name: numactl
 Version: 2.0.13
-Release: 4
+Release: 5
 Summary: Library for tuning for Non Uniform Memory Access machines
 License: GPLv2
 URL: https://github.com/numactl/numactl
 Source0: https://github.com/numactl/numactl/releases/download/v%{version}/numactl-%{version}.tar.gz
-BuildRequires: libtool automake autoconf git
+BuildRequires: libtool automake autoconf 
 
 %description
 Simple NUMA policy support. It consists of a numactl program to run other
@@ -28,7 +28,7 @@ License: LGPLv2 and GPLv2
 Development package for numa library calls
 
 %prep
-%autosetup -n %{name}-%{version} -p1 -Sgit
+%autosetup -n %{name}-%{version} -p1
 
 %build
 %configure
@@ -69,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jul 30 2021 chenyanpanHW <chenyanpan@huawei.com> - 2.0.13-5
+- DESC: delete -Sgit from %autosetup, and delete BuildRequires git
+
 * Fri Jan 10 2020 yuxiangyang<yuxiangyang4@huawei.com> - 2.0.13-4
 - upgrade version to 2.0.13
 
