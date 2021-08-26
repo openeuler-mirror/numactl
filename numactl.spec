@@ -1,6 +1,6 @@
 Name: numactl
 Version: 2.0.13
-Release: 5
+Release: 6
 Summary: Library for tuning for Non Uniform Memory Access machines
 License: GPLv2
 URL: https://github.com/numactl/numactl
@@ -39,6 +39,11 @@ Development package for numa library calls
 rm -rf $RPM_BUILD_ROOT
 %make_install
 
+%check
+# test-suites need current-build dynamic libray,
+# so we export LD_LIBRARY_PATH for find it.
+LD_LIBRARY_PATH=$(pwd)/.libs make check
+
 %ldconfig_scriptlets
 %post libs -p /sbin/ldconfig
 %postun libs -p /sbin/ldconfig
@@ -69,6 +74,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Aug 26 2021 Chunsheng Luo <luochunsheng@huawei.com> - 2.0.13-6
+- DESC: enable make check
+
 * Fri Jul 30 2021 chenyanpanHW <chenyanpan@huawei.com> - 2.0.13-5
 - DESC: delete -Sgit from %autosetup, and delete BuildRequires git
 
