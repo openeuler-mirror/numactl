@@ -1,6 +1,6 @@
 Name: numactl
-Version: 2.0.13
-Release: 6
+Version: 2.0.14
+Release: 1
 Summary: Library for tuning for Non Uniform Memory Access machines
 License: GPLv2
 URL: https://github.com/numactl/numactl
@@ -74,6 +74,9 @@ LD_LIBRARY_PATH=$(pwd)/.libs make check
 %{_mandir}/man3/*.3*
 
 %changelog
+* Tue Nov 30 2021 zhouwenpei<zhouwenpei1@huawei.com> - 2.0.14-1
+- upgrade version to 2.0.14
+
 * Thu Aug 26 2021 Chunsheng Luo <luochunsheng@huawei.com> - 2.0.13-6
 - DESC: enable make check
 
