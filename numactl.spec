@@ -1,11 +1,14 @@
 Name: numactl
 Version: 2.0.14
-Release: 1
+Release: 2
 Summary: Library for tuning for Non Uniform Memory Access machines
 License: GPLv2
 URL: https://github.com/numactl/numactl
 Source0: https://github.com/numactl/numactl/releases/download/v%{version}/numactl-%{version}.tar.gz
 BuildRequires: libtool automake autoconf 
+
+Patch1:		0001-Fix-segmentation-fault-when-using-offset.patch
+Patch2:		0002-fix-verify_shm-memcmp-nodes.patch
 
 %description
 Simple NUMA policy support. It consists of a numactl program to run other
@@ -74,6 +77,9 @@ LD_LIBRARY_PATH=$(pwd)/.libs make check
 %{_mandir}/man3/*.3*
 
 %changelog
+* Tue Feb 8 2022 zhouwenpei<zhouwenpei1@h-partners.com> - 2.0.14-2
+- fix segmentation fault with --offset and output wrong result with --verify 
+
 * Tue Nov 30 2021 zhouwenpei<zhouwenpei1@huawei.com> - 2.0.14-1
 - upgrade version to 2.0.14
 
