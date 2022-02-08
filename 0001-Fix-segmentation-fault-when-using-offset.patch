@@ -1,0 +1,44 @@
+From 53797364e07e67555ec3b139cf3c3563c7035c11 Mon Sep 17 00:00:00 2001
+From: Chunsheng Luo <luochunsheng@huawei.com>
+Date: Wed, 8 Sep 2021 17:18:53 +0800
+Subject: [PATCH] shm.c: Fix segmentation fault when using offset
+
+The following command can trigger the bug
+    numactl --offset 4096 --length 65536 --file xxx -p0 --touch
+
+When we create a shm file, we just consider shmlen, but not consider shmoffset,
+resulting in the mapped memory is no within the scope of the new shm file.
+---
+ shm.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/shm.c b/shm.c
+index e5192e5..324cfbe 100644
+--- a/shm.c
++++ b/shm.c
+@@ -107,8 +107,8 @@ void attach_sysvshm(char *name, char *opt)
+                      "need a --length to create a sysv shared memory segment");
+ 		fprintf(stderr,
+          "numactl: Creating shared memory segment %s id %ld mode %04o length %.fMB\n",
+-			name, shmid, shmmode, ((double)shmlen) / (1024*1024) );
+-		shmfd = shmget(key, shmlen, IPC_CREAT|shmmode|shmflags);
++			name, shmid, shmmode, ((double)(shmlen + shmoffset)) / (1024*1024) );
++		shmfd = shmget(key, shmlen + shmoffset, IPC_CREAT|shmmode|shmflags);
+ 		if (shmfd < 0)
+ 			nerror("cannot create shared memory segment");
+ 	}
+@@ -145,8 +145,12 @@ void attach_shared(char *name, char *opt)
+ 	}
+ 	if (fstat64(shmfd, &st) < 0)
+ 		err("shm stat");
+-	if (shmlen > st.st_size) {
+-		if (ftruncate64(shmfd, shmlen) < 0) {
++	/* the file size must be larger than mmap shmlen + shmoffset, otherwise SIGBUS
++	 * will be caused when we access memory, because mmaped memory is no longer in
++	 * the range of the file laster.
++	 */
++	if ((shmlen + shmoffset) > st.st_size) {
++		if (ftruncate64(shmfd, shmlen + shmoffset) < 0) {
+ 			/* XXX: we could do it by hand, but it would it
+ 			   would be impossible to apply policy then.
+ 			   need to fix that in the kernel. */

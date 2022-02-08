@@ -1,0 +1,25 @@
+From c833565be79f2ef2541459f2d8444894abd9d939 Mon Sep 17 00:00:00 2001
+From: Chunsheng Luo <luochunsheng@huawei.com>
+Date: Wed, 8 Sep 2021 18:10:53 +0800
+Subject: [PATCH] shm.c: fix verify_shm memcmp nodes
+
+When nodemask_sz is large 64 (CONFIG_NODES_SHIFT > 6), verify_shm
+will output wrong result "mismatched node mask". that's not what we
+expected, we expected compare nodes->maskp.
+---
+ shm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/shm.c b/shm.c
+index 324cfbe..3cf3d2b 100644
+--- a/shm.c
++++ b/shm.c
+@@ -295,7 +295,7 @@ void verify_shm(int policy, struct bitmask *nodes)
+ 			      policy_name(pol2), policy_name(policy));
+ 			return;
+ 		}
+-		if (memcmp(nodes2, nodes, numa_bitmask_nbytes(nodes))) {
++		if (memcmp(nodes2->maskp, nodes->maskp, numa_bitmask_nbytes(nodes))) {
+ 			vwarn(p, "mismatched node mask\n");
+ 			printmask("expected", nodes);
+ 			printmask("real", nodes2);
