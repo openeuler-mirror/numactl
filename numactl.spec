@@ -1,11 +1,14 @@
 Name: numactl
 Version: 2.0.13
-Release: 4
+Release: 5
 Summary: Library for tuning for Non Uniform Memory Access machines
 License: GPLv2
 URL: https://github.com/numactl/numactl
 Source0: https://github.com/numactl/numactl/releases/download/v%{version}/numactl-%{version}.tar.gz
 BuildRequires: libtool automake autoconf git
+
+Patch0001:	Fix-crashes-when-using-the-touch-option.patch
+Patch0002:	fix-use-after-free.patch
 
 %description
 Simple NUMA policy support. It consists of a numactl program to run other
@@ -69,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sat May 07 2022 zhouwenpei<zhouwenpei1@h-partners.com> - 2.0.13-5
+- fix crashes when using the "--touch" option
+
 * Fri Jan 10 2020 yuxiangyang<yuxiangyang4@huawei.com> - 2.0.13-4
 - upgrade version to 2.0.13
 
