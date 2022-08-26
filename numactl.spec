@@ -1,6 +1,6 @@
 Name: numactl
 Version: 2.0.14
-Release: 2
+Release: 3
 Summary: Library for tuning for Non Uniform Memory Access machines
 License: GPLv2
 URL: https://github.com/numactl/numactl
@@ -34,6 +34,10 @@ Development package for numa library calls
 %autosetup -n %{name}-%{version} -p1
 
 %build
+%ifarch riscv64
+export LDFLAGS="${build_ldflags} -latomic"
+%endif
+
 %configure
 %disable_rpath
 %make_build CFLAGS="$RPM_OPT_FLAGS -I."
@@ -43,9 +47,12 @@ rm -rf $RPM_BUILD_ROOT
 %make_install
 
 %check
+#riscv64 doesn't support numa
+%ifnarch riscv64
 # test-suites need current-build dynamic libray,
 # so we export LD_LIBRARY_PATH for find it.
 LD_LIBRARY_PATH=$(pwd)/.libs make check
+%endif
 
 %ldconfig_scriptlets
 %post libs -p /sbin/ldconfig
@@ -77,6 +84,9 @@ LD_LIBRARY_PATH=$(pwd)/.libs make check
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Sep 9 2022 lvxiaoqian<xiaoqian@nj.iscas.ac.cn> - 2.0.14-3
+- add LDFLAGS and skip test for riscv
+
 * Tue Feb 8 2022 zhouwenpei<zhouwenpei1@h-partners.com> - 2.0.14-2
 - fix segmentation fault with --offset and output wrong result with --verify 
 
